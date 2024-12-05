@@ -1,6 +1,5 @@
 import java.io.File
 import java.io.BufferedReader
-import kotlin.math.abs
 
 val bufferedReader: BufferedReader = File("input.txt").bufferedReader()
 val inputString = bufferedReader.use { it.readText() }
