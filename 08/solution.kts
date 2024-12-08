@@ -16,29 +16,18 @@ open class Position(
     }
 }
 
-interface IAmAntinode
-
-interface IAmAntenna { val frequency: Char }
-
-fun Position.toAntinode() = Antinode(x, y)
-
 class Antenna(
     x: Int,
     y: Int,
-    override val frequency: Char,
-) : Position(x, y), IAmAntenna
-
-class Antinode(
-    x: Int,
-    y: Int,
-) : Position(x, y), IAmAntinode
+    val frequency: Char,
+) : Position(x, y)
 
 
 class AntennaMap(positions: List<Position>) {
-    val antennas = positions.filterIsInstance<Antenna>()
+    private val antennas = positions.filterIsInstance<Antenna>()
     val width = positions.maxOf { it.x }
     val height = positions.maxOf { it.y }
-    val antinodes = mutableListOf<Antinode>()
+    val antinodes = mutableListOf<Position>()
 
     fun isInBounds(position: Position): Boolean = (0..width).contains(position.x) && (0..height).contains(position.y)
 
@@ -51,24 +40,24 @@ class AntennaMap(positions: List<Position>) {
                         if (value1 != value2) {
                             val diff = value1 - value2
 
-                            var d1 = (value1 + diff).toAntinode()
-                            var d2 = (value2 - diff).toAntinode()
+                            var d1 = (value1 + diff)
+                            var d2 = (value2 - diff)
 //                            with(antinodes) {  // part one
-//                                add((value2 - diff).toAntinode())
-//                                add((value1 + diff).toAntinode())
+//                                add((value2 - diff))
+//                                add((value1 + diff))
 //                            }
                             while (isInBounds(d1)) {
                                 antinodes.add(d1)
-                                d1 = (d1 + diff).toAntinode()
+                                d1 = (d1 + diff)
                             }
 
                             while (isInBounds(d2)) {
                                 antinodes.add(d2)
-                                d2 = (d2 - diff).toAntinode()
+                                d2 = (d2 - diff)
                             }
 
-                            antinodes.add(value1.toAntinode())
-                            antinodes.add(value2.toAntinode())
+                            antinodes.add(value1)
+                            antinodes.add(value2)
                         }
                     }
                 }
@@ -87,5 +76,5 @@ val positions: List<Position> = inputString
 AntennaMap(positions)
     .apply(AntennaMap::markAntinodes)
     .let { map ->
-        map.antinodes.toSet().filter { (0..map.width).contains(it.x) && (0..map.height).contains(it.y) }
+        map.antinodes.toSet().filter { map.isInBounds(it) }
     }.map { "(${it.x},${it.y})" }.size
