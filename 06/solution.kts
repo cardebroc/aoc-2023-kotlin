@@ -55,18 +55,12 @@ class Guard(
                 }
             }.joinToString("\n")
         if (verbose) {
-//            val printThread = thread {
-//                println()
-//                sleep(10)
-//            }
-
             clearTerminal()
             println(img)
-//            printThread.join()
         }
     }
 
-    fun moveSmart() {
+    fun moveSmart() {  // this is broken
         val nextPOI = when (direction) {
             Direction.UP -> updatedMap.filter { it.key.x == currentPosition.x && it.key.y < currentPosition.y }.takeIf { it.isNotEmpty() }?.minBy { it.key.y }?.key
             Direction.DOWN -> updatedMap.filter { it.key.x == currentPosition.x && it.key.y > currentPosition.y }.takeIf { it.isNotEmpty() }?.minBy { it.key.y }?.key
